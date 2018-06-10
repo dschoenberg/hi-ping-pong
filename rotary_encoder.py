@@ -3,8 +3,7 @@
 
 
 class decoder:
-   """Class to decode mechanical rotary encoder pulses."""
-
+    """Class to decode mechanical rotary encoder pulses."""
     def __init__(self, GPIO, gpioA, gpioB, callback):
         """
         Instantiate the class with the pi and gpios connected to
@@ -30,7 +29,7 @@ class decoder:
         self.GPIO.add_event_detect(self.gpioA, GPIO.BOTH, self._pulse)
         self.GPIO.add_event_detect(self.gpioB, GPIO.BOTH, self._pulse)
 
-    def _pulse(self, gpio, level, tick):
+    def _pulse(self, pin, level, tick):
         """
         Decode the rotary encoder pulse.
 
@@ -47,20 +46,20 @@ class decoder:
             ----+         +---------+         +---------+  1
         """
 
-        if gpio == self.gpioA:
+        if pin == self.gpioA:
             self.levA = level
         else:
             self.levB = level
 
-        if gpio != self.lastGpio:  # debounce
-            self.lastGpio = gpio
+        if pin != self.lastGpio:  # debounce
+            self.lastGpio = pin
 
-            if gpio == self.gpioA and level == 1:
-            if self.levB == 1:
-                self.callback(1)
-            elif gpio == self.gpioB and level == 1:
-            if self.levA == 1:
-                self.callback(-1)
+            if pin == self.gpioA and level == 1:
+                if self.levB == 1:
+                    self.callback(1)
+            elif pin == self.gpioB and level == 1:
+                if self.levA == 1:
+                    self.callback(-1)
 
     def cancel(self):
         """
@@ -91,4 +90,4 @@ if __name__ == "__main__":
     decoder = rotary_encoder.decoder(GPIO, 10, 12, callback)
     time.sleep(300)
     decoder.cancel()
-    pi.stop()
+#    pi.stop()

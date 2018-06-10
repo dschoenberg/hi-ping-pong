@@ -27,7 +27,7 @@ def handle(pin):
 			counter += 1
 		else:
 			counter -= 1
-		print counter
+		print(counter)
 	last_state = state1
 
 GPIO.add_event_detect(btn1, GPIO.BOTH, handle)
