@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-
-
 class decoder:
     """Class to decode mechanical rotary encoder pulses."""
     def __init__(self, GPIO, gpioA, gpioB, callback):
@@ -46,7 +44,7 @@ class decoder:
             ----+         +---------+         +---------+  1
         """
 
-	level = self.GPIO.input(pin)
+        level = self.GPIO.input(pin)
         if pin == self.gpioA:
             self.levA = level
         else:
@@ -91,4 +89,3 @@ if __name__ == "__main__":
     decoder = rotary_encoder.decoder(GPIO, 10, 12, callback)
     time.sleep(300)
     decoder.cancel()
-#    pi.stop()
