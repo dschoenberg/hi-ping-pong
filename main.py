@@ -63,7 +63,6 @@ if __name__ == "__main__":
 	getPlayers()
 	rotary_encoder.decoder(GPIO, winnerPin1, winnerPin2, updateWinner)
 	rotary_encoder.decoder(GPIO, loserPin1, loserPin2, updateLoser)
-	rotary_encoder.decoder(GPIO, submitPin, loserPin2, submitGame)
 	GPIO.add_event_detect(submitPin, GPIO.FALLING, submitGame)
 	while True:
 		time.sleep(1e6)
