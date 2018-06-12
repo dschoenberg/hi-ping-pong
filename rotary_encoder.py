@@ -29,7 +29,7 @@ class decoder:
         self.GPIO.add_event_detect(self.gpioA, GPIO.BOTH, self._pulse)
         self.GPIO.add_event_detect(self.gpioB, GPIO.BOTH, self._pulse)
 
-    def _pulse(self, pin, level, tick):
+    def _pulse(self, pin):
         """
         Decode the rotary encoder pulse.
 
@@ -46,6 +46,7 @@ class decoder:
             ----+         +---------+         +---------+  1
         """
 
+	level = self.GPIO.input(pin)
         if pin == self.gpioA:
             self.levA = level
         else:

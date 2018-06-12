@@ -4,14 +4,15 @@ import RPi.GPIO as GPIO
 import time
 import threading
 import sys
+import rotary_encoder
 
 btn1 = 10
 btn2 = 12
 
 GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(btn1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(btn2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+#GPIO.setup(btn1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+#GPIO.setup(btn2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 counter = 0
 
@@ -29,8 +30,9 @@ def handle(pin):
 			counter -= 1
 		print(counter)
 	last_state = state1
+	print(counter)
 
-GPIO.add_event_detect(btn1, GPIO.BOTH, handle)
+#GPIO.add_event_detect(btn1, GPIO.BOTH, handle, bouncetime = 300)
 
 import urllib2
 import json
@@ -66,7 +68,7 @@ def getPlayers():
 
 print('off we go')
 getPlayers()
-
+decoder = rotary_encoder.decoder(GPIO, 10, 12, updateWinner)
 while True:
 	time.sleep(1)
 
