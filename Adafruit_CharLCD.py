@@ -81,8 +81,6 @@ class Adafruit_CharLCD:
 	self.write4bits(0x0C) # turn cursor off 0x0E to enable cursor
 	self.write4bits(0x06) # shift cursor right
 
-	print('init')
-
 	self.displaycontrol = self.LCD_DISPLAYON | self.LCD_CURSOROFF | self.LCD_BLINKOFF
 
 	self.displayfunction = self.LCD_4BITMODE | self.LCD_1LINE | self.LCD_5x8DOTS
