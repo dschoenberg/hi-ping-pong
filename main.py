@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 from Adafruit_CharLCD import Adafruit_CharLCD
 import RPi.GPIO as GPIO
 import time
@@ -23,22 +22,28 @@ submitPin = 7
 playerList = None
 winnerIndex = 0
 loserIndex = 0
+submitting = False
+
 
 def writeMessage(message):
 	global lcd
 	lcd.clear()
 	lcd.message(message)
 
+
 def getWinner():
 	return playerList[winnerIndex]
 
+
 def getLoser():
 	return playerList[loserIndex]
+
 
 def getPlayerName(player):
 	first = player["firstName"][:1]
 	last = player["lastName"]
 	return (first + '.' + last)
+
 
 def updateDisplay():
 	winner = getPlayerName(getWinner())
@@ -47,6 +52,7 @@ def updateDisplay():
 	print('loser:  ' + loser)
 
 	writeMessage('winner: ' + winner + '\nloser: ' + loser)
+
 
 def updateWinner(forward):
 	global winnerIndex
@@ -64,6 +70,7 @@ def updateWinner(forward):
 
 	updateDisplay()
 
+
 def updateLoser(forward):
 	global loserIndex
 
@@ -77,26 +84,31 @@ def updateLoser(forward):
 			loserIndex = len(playerList) - 1
 	if loserIndex == winnerIndex:
 		updateLoser(forward)
-	
+
 	updateDisplay()
 
-submitting = False
+
 def submitGame(pin):
-	global submitting
+	global submitting, winnerIndex, loserIndex
 	print('submitting game...')
-	print('winner: ' + playerList[winnerIndex]['_id'])
-	print('loser:  ' + playerList[loserIndex]['_id'])
+	writeMessage('Submitting game...')
 
 	data = {
-		'winner':playerList[winnerIndex]['_id'],
-		'loser':playerList[loserIndex]['_id']
+		'winner': playerList[winnerIndex]['_id'],
+		'loser': playerList[loserIndex]['_id']
 	}
 
 	if not submitting:
-		submitting = True #I regret nothing!
+		submitting = True  # I regret nothing!
 		req = requests.post("http://hi-ping-pong.herokuapp.com/match", data=data)
 		print(req)
 		submitting = False
+
+	writeMessage('Game submitted...')
+	time.sleep(3)
+	winnerIndex = loserIndex = 0
+	updateDisplay()
+
 
 def getPlayers():
 	global playerList, lcd
@@ -115,22 +127,24 @@ def getPlayers():
 	time.sleep(3)
 	updateDisplay()
 
+
 def getIP():
 	cmd = "ip addr show wlan0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1"
 	p = Popen(cmd, shell=True, stdout=PIPE)
 	output = p.communicate()[0]
 	return output.strip()
 
+
 if __name__ == "__main__":
 	writeMessage('Welcome\n' + getIP())
-	
+
 	getPlayers()
 	rotary_encoder.decoder(GPIO, winnerPin1, winnerPin2, updateWinner)
 	rotary_encoder.decoder(GPIO, loserPin1, loserPin2, updateLoser)
-	
+
 	GPIO.setup(submitPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 	GPIO.add_event_detect(submitPin, GPIO.FALLING, submitGame)
-	
+
 	while True:
 		try:
 			time.sleep(1e6)
@@ -139,5 +153,3 @@ if __name__ == "__main__":
 			lcd.message('Shutting down')
 			GPIO.cleanup()
 			sys.exit()
-
-
