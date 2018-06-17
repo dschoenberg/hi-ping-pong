@@ -58,7 +58,7 @@ class Adafruit_CharLCD:
 
 
 
-    def __init__(self, pin_rs=25, pin_e=24, pins_db=[23, 17, 21, 22], GPIO = None):
+    def __init__(self, pin_rs=40, pin_e=38, pins_db=[37, 35, 36, 33], GPIO = None):
 	# Emulate the old behavior of using RPi.GPIO if we haven't been given
 	# an explicit GPIO interface to use
 	if not GPIO:
@@ -68,7 +68,7 @@ class Adafruit_CharLCD:
         self.pin_e = pin_e
         self.pins_db = pins_db
 
-        self.GPIO.setmode(GPIO.BCM)
+        self.GPIO.setmode(GPIO.BOARD)
         self.GPIO.setup(self.pin_e, GPIO.OUT)
         self.GPIO.setup(self.pin_rs, GPIO.OUT)
 
@@ -80,6 +80,8 @@ class Adafruit_CharLCD:
 	self.write4bits(0x28) # 2 line 5x7 matrix
 	self.write4bits(0x0C) # turn cursor off 0x0E to enable cursor
 	self.write4bits(0x06) # shift cursor right
+
+	print('init')
 
 	self.displaycontrol = self.LCD_DISPLAYON | self.LCD_CURSOROFF | self.LCD_BLINKOFF
 
@@ -262,7 +264,10 @@ if __name__ == '__main__':
     lcd = Adafruit_CharLCD()
 
     lcd.clear()
-    lcd.message("  Adafruit 16x2\n  Standard LCD")
+    lcd.message("  Adafruit 16x2\n  Standard DJS")
+    sleep(5)
+
+    lcd.clear()
 
     GPIO.cleanup()
 
