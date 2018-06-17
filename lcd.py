@@ -5,9 +5,9 @@ from datetime import datetime
 
 lcd = Adafruit_CharLCD()
 
-cmd = "ip addr show wlan0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1"
 
-def run_cmd(cmd):
+def getIP():
+	cmd = "ip addr show wlan0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1"
 	p = Popen(cmd, shell=True, stdout=PIPE)
 	output = p.communicate()[0]
 	return output.strip()

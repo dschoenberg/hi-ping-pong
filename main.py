@@ -7,6 +7,8 @@ import rotary_encoder
 import urllib2
 import json
 import requests
+import sys
+from subprocess import Popen, PIPE
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -22,6 +24,10 @@ playerList = None
 winnerIndex = 0
 loserIndex = 0
 
+def writeMessage(message):
+	global lcd
+	lcd.clear()
+	lcd.message(message)
 
 def getWinner():
 	return playerList[winnerIndex]
@@ -40,8 +46,7 @@ def updateDisplay():
 	print('winner: ' + winner)
 	print('loser:  ' + loser)
 
-	lcd.clear()
-	lcd.message('winner: ' + winner + '\nloser: ' + loser)
+	writeMessage('winner: ' + winner + '\nloser: ' + loser)
 
 def updateWinner(forward):
 	global winnerIndex
@@ -96,8 +101,7 @@ def submitGame(pin):
 def getPlayers():
 	global playerList, lcd
 	print('requesting players')
-	lcd.clear()
-	lcd.message('requesting players')
+	writeMessage('requesting players')
 
 	url = "http://hi-ping-pong.herokuapp.com/players"
 	req = urllib2.Request(url)
@@ -106,15 +110,19 @@ def getPlayers():
 	playerList = json.loads(f.read())
 	#print(str(playerList))
 	print(str(len(playerList)) + ' players loaded')
+	writeMessage(str(len(playerList)) + ' players loaded')
 
-	lcd.clear()
-	lcd.message(str(len(playerList)) + ' players loaded')
 	time.sleep(3)
 	updateDisplay()
 
+def getIP():
+	cmd = "ip addr show wlan0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1"
+	p = Popen(cmd, shell=True, stdout=PIPE)
+	output = p.communicate()[0]
+	return output.strip()
+
 if __name__ == "__main__":
-	lcd.clear()
-	lcd.message('init')
+	writeMessage('Welcome\n' + getIP())
 	
 	getPlayers()
 	rotary_encoder.decoder(GPIO, winnerPin1, winnerPin2, updateWinner)
@@ -124,5 +132,12 @@ if __name__ == "__main__":
 	GPIO.add_event_detect(submitPin, GPIO.FALLING, submitGame)
 	
 	while True:
-		time.sleep(1e6)
+		try:
+			time.sleep(1e6)
+		except KeyboardInterrupt:
+			lcd.clear()
+			lcd.message('Shutting down')
+			GPIO.cleanup()
+			sys.exit()
+
 
