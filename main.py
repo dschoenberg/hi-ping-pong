@@ -20,8 +20,8 @@ loserPin2 = 18
 submitPin = 7
 
 playerList = None
-winnerIndex = 0
-loserIndex = 0
+winnerIndex = None
+loserIndex = None
 submitting = False
 
 
@@ -32,30 +32,43 @@ def writeMessage(message):
 
 
 def getWinner():
+	if winnerIndex is None:
+		return None
 	return playerList[winnerIndex]
 
 
 def getLoser():
+	if loserIndex is None:
+		return None
 	return playerList[loserIndex]
 
 
 def getPlayerName(player):
+	if player is None:
+		return "Not selected"
 	first = player["firstName"][:1]
 	last = player["lastName"]
 	return (first + '.' + last)
 
 
 def updateDisplay():
-	winner = getPlayerName(getWinner())
-	loser = getPlayerName(getLoser())
-	print('winner: ' + winner)
-	print('loser:  ' + loser)
+	global winnerIndex, loserIndex
+	if winnerIndex is None and loserIndex is None:
+		writeMessage('Select winner and loser')
+	else:
+		winner = getPlayerName(getWinner())
+		loser = getPlayerName(getLoser())
+		print('winner: ' + winner)
+		print('loser:  ' + loser)
 
-	writeMessage('winner: ' + winner + '\nloser: ' + loser)
+		writeMessage('winner: ' + winner + '\nloser: ' + loser)
 
 
 def updateWinner(forward):
 	global winnerIndex
+
+	if winnerIndex is None:
+		winnerIndex = 0
 
 	if forward:
 		winnerIndex = winnerIndex + 1
@@ -73,6 +86,9 @@ def updateWinner(forward):
 
 def updateLoser(forward):
 	global loserIndex
+
+	if loserIndex is None:
+		loserIndex = 0
 
 	if forward:
 		loserIndex = loserIndex + 1
@@ -106,7 +122,7 @@ def submitGame(pin):
 
 	writeMessage('Game submitted...')
 	time.sleep(3)
-	winnerIndex = loserIndex = 0
+	winnerIndex = loserIndex = None
 	updateDisplay()
 
 
@@ -137,6 +153,7 @@ def getIP():
 
 if __name__ == "__main__":
 	writeMessage('Welcome\n' + getIP())
+	time.sleep(5)
 
 	getPlayers()
 	rotary_encoder.decoder(GPIO, winnerPin1, winnerPin2, updateWinner)
