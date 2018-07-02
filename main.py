@@ -112,7 +112,7 @@ def submitGame(pin):
 
 def getPlayers():
 	global playerList, lcd
-	print('requesting players')
+	print('requesting\n players')
 	writeMessage('requesting players')
 
 	url = "http://hi-ping-pong.herokuapp.com/players"
