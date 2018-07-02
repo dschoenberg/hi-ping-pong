@@ -54,7 +54,7 @@ def getPlayerName(player):
 def updateDisplay():
 	global winnerIndex, loserIndex
 	if winnerIndex is None and loserIndex is None:
-		writeMessage('Select winner and loser')
+		writeMessage('Select winner\n      and loser')
 	else:
 		winner = getPlayerName(getWinner())
 		loser = getPlayerName(getLoser())
@@ -138,7 +138,7 @@ def getPlayers():
 	playerList = json.loads(f.read())
 	#print(str(playerList))
 	print(str(len(playerList)) + ' players loaded')
-	writeMessage(str(len(playerList)) + ' players loaded')
+	writeMessage(str(len(playerList)) + '\nplayers loaded')
 
 	time.sleep(3)
 	updateDisplay()
@@ -152,6 +152,7 @@ def getIP():
 
 
 if __name__ == "__main__":
+	print('start')
 	writeMessage('Welcome\n' + getIP())
 	time.sleep(5)
 
