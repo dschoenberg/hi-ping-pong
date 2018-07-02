@@ -54,7 +54,7 @@ def getPlayerName(player):
 def updateDisplay():
 	global winnerIndex, loserIndex
 	if winnerIndex is None and loserIndex is None:
-		writeMessage('Select winner\n      and loser')
+		writeMessage('Select winner\n       and loser')
 	else:
 		winner = getPlayerName(getWinner())
 		loser = getPlayerName(getLoser())
@@ -128,7 +128,7 @@ def submitGame(pin):
 
 def getPlayers():
 	global playerList, lcd
-	print('requesting players')
+	print('requesting\n players')
 	writeMessage('requesting players')
 
 	url = "http://hi-ping-pong.herokuapp.com/players"
