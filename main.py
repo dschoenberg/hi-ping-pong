@@ -51,7 +51,7 @@ def updateDisplay():
 	print('winner: ' + winner)
 	print('loser:  ' + loser)
 
-	writeMessage('winner: ' + winner + '\nloser: ' + loser)
+	writeMessage('winner: ' + winner + '\n loser: ' + loser)
 
 
 def updateWinner(forward):
